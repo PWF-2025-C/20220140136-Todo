@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,9 +20,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/todo', [TodoController::class, 'index'])->name('todo.index'); //tambahkan route untuk todo
+Route::post('/todo', [TodoController::class, 'store'])->name('todo.store');
+Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
 Route::get('/todo/create', [TodoController::class, 'create'])->name('todo.create'); //tambahkan route untuk todo
 Route::get('/todo/edit', [TodoController::class, 'edit'])->name('todo.edit'); //tambahkan route untuk todo
 
-Route::get('/user', [TodoController::class, 'index'])->name('user.index'); //tambahkan route untuk todo
+Route::get('/user', [UserController::class, 'index'])->name('user.index'); //tambahkan route untuk todo
+Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+Route::get('/user/edit', [UserController::class, 'edit'])->name('user.edit');
 
 require __DIR__.'/auth.php';
