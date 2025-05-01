@@ -86,17 +86,37 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex space-x-3">
-                                            <a href="{{ route('user.edit', $user) }}" class="text-blue-400 hover:underline transition duration-150 ease-in-out">Edit</a>
-                                            <form action="{{ route('user.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:underline transition duration-150 ease-in-out">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+            <div class="flex space-x-3">
+                @if ($user->is_admin)
+                    <form action="{{ route('user.removeadmin', $user) }}" method="Post">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit"
+                            class="text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                            Remove Admin
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('user.makeadmin', $user) }}" method="Post">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit"
+                            class="text-red-600 dark:text-red-400 whitespace-nowrap">
+                            Make Admin
+                        </button>
+                    </form>
+                @endif
+            </div>
+            <form action="{{ route('user.destroy', $user) }}" method="Post">
+    @csrf
+    @method('delete')
+    <button type="submit"
+        class="text-red-600 dark:text-red-400 whitespace-nowrap">
+        Delete
+    </button>
+</form>
+
+        </td>
                                 </tr>
                             @empty
                                 <tr class="bg-white dark:bg-gray-800">

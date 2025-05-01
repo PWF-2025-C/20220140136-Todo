@@ -51,7 +51,7 @@
                                         </a>
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if (!$todo->is_done)
+                                        @if (!$todo->is_complete)
                                             <span class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                                                 Ongoing
                                             </span>
@@ -62,19 +62,35 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-    <div class="flex space-x-2">
-        {{-- Tombol Edit --}}
-        <a href="{{ route('todo.edit', $todo) }}" class="text-blue-500 hover:underline">Edit</a>
-
-        {{-- Tombol Delete --}}
-        <form action="{{ route('todo.destroy', $todo) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this todo?');">
+                                    <div class="flex space-x-3">
+    {{-- Action Here --}}
+    @if ($todo->is_complete == false)
+        <form action="{{ route('todo.complete', $todo) }}" method="Post">
+            @csrf
+            @method('PATCH')
+            <button type="submit"
+                class="text-green-600 dark:text-green-400">
+                Complete
+            </button>
+        </form>
+    @else
+        <form action="{{ route('todo.uncomplete', $todo) }}" method="Post">
+            @csrf
+            @method('PATCH')
+            <button type="submit"
+                class="text-blue-600 dark:text-blue-400">
+                Uncomplete
+            </button>
+        </form>
+    @endif
+</div>
+<form action="{{ route('todo.destroy', $todo) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this todo?');">
             @csrf
             @method('DELETE')
-            <button type="submit" class="text-red-600 hover:underline">
+            <button type="submit" class="text-red-600 dark:text-red-400">
                 Delete
             </button>
         </form>
-    </div>
 </td>
                                 </tr>
                             @empty
@@ -87,6 +103,17 @@
                         </tbody>
                     </table>
             </div>
+            @if ($todosCompleted > 1)
+    <div class="p-6 text-xl text-gray-900 dark:text-gray-100">
+        <form action="{{ route('todo.deleteallcompleted') }}" method="POST">
+            @csrf
+            @method('delete')
+            <x-primary-button>
+                Delete All Completed Task
+            </x-primary-button>
+        </form>
+    </div>
+@endif
         </div>
     </div>
 </x-app-layout>
