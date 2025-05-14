@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Category;
+
 
 class TodoController extends Controller
 {
     public function index()
     {
         $todos = Todo::where('user_id', auth()->user()->id)
+            ->with('category')
             ->orderBy('is_complete', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -29,12 +32,18 @@ class TodoController extends Controller
         
         $request->validate([
             'title' => 'required|max:255',
+            'category_id' => 'nullable|exists:categories,id'
+
+
         ]);
     
         // Eloquent way - Readable
         $todo = Todo::create([
             'title' => ucfirst($request->title),
             'user_id' => auth()->user()->id,
+            'category_id' => $request->category_id
+
+
         ]);
     
         return redirect()
@@ -45,14 +54,15 @@ class TodoController extends Controller
 
     public function create()
     {
-        return view('todo.create');
+        $categories = Category::all();
+        return view('todo.create', compact('categories'));
     }
 
     public function edit(Todo $todo)
 {
     if (auth()->user()->id == $todo->user_id) {
-        // dd($todo);
-        return view('todo.edit', compact('todo'));
+            $categories = Category::all();
+            return view('todo.edit', compact('todo', 'categories'));
     } else {
         // abort(403);
         // abort(403, 'Not authorized');
@@ -64,6 +74,9 @@ public function update(Request $request, Todo $todo)
 {
     $request->validate([
         'title' => 'required|max:255',
+        'category_id' => 'nullable|exists:categories,id'
+
+
     ]);
 
     // Practical
@@ -73,6 +86,9 @@ public function update(Request $request, Todo $todo)
     // Eloquent Way - Readable
     $todo->update([
         'title' => ucfirst($request->title),
+        'category_id' => $request->category_id
+
+
     ]);
 
     return redirect()->route('todo.index')->with('success', 'Todo updated successfully!');

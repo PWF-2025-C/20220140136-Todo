@@ -38,6 +38,7 @@
                         <thead class="text-s text-left text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200">
                             <tr>
                                 <th scope="col" class="px-6 py-4">Title</th>
+                                <th scope="col" class="px-6 py-3 text-left">Category</th>
                                 <th scope="col" class="px-6 py-4">Status</th>
                                 <th scope="col" class="px-6 py-4">Action</th>
                             </tr>
@@ -49,6 +50,9 @@
                                         <a href="{{ route('todo.edit', $todo) }}" class="hover:underline">
                                             {{ $todo->title }}
                                         </a>
+                                    </td>
+                                    <td class="px-6 py-4 text-black dark:text-white">
+                                        {{ $todo->category->title ?? 'No Category' }}
                                     </td>
                                     <td class="px-6 py-4">
                                         @if (!$todo->is_complete)

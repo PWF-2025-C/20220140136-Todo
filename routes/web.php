@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,5 +46,15 @@ Route::middleware(['auth', 'admin'])->group(function(){
     
 });
 
+
+Route::middleware('auth')->group(function () {
+    Route::resource('category', CategoryController::class)->except(['show']);
+    Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
+    Route::get('/category/create', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('/category/{category}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+    Route::patch('/category/{category}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+});
 
 require __DIR__.'/auth.php';
